@@ -72,6 +72,5 @@ func Protected(c *fiber.Ctx) error {
 	user := c.Locals("user").(*jtoken.Token)
 	claims := user.Claims.(jtoken.MapClaims)
 	email := claims["email"].(string)
-	favPhrase := claims["fav"].(string)
-	return c.SendString("Welcome 👋" + email + " " + favPhrase)
+	return c.SendString("Welcome 👋" + email)
 }
