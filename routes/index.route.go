@@ -13,7 +13,10 @@ func RouteInit(app *fiber.App) {
 
 	// JWT INIT
 	jwt := middlewares.NewAuthMiddleware(config.Secret)
+
 	app.Post("/login", controllers.Login)
+	app.Get("/protected", jwt, controllers.Protected)
+
 	app.Get("/users", jwt, controllers.UserGetAll)
 	app.Post("/users", jwt, controllers.CreateUser)
 

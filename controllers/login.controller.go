@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"strconv"
 	"time"
 
 	"go-relation/relasi-gorm/config"
@@ -47,7 +48,7 @@ func Login(c *fiber.Ctx) error {
 	day := time.Hour * 24
 	// Create the JWT claims, which includes the user ID and expiry time
 	claims := jtoken.MapClaims{
-		"ID":    user.ID,
+		"ID":    strconv.FormatInt(int64(user.ID), 10),
 		"email": user.Email,
 		"exp":   time.Now().Add(day * 1).Unix(),
 	}
@@ -71,7 +72,7 @@ func Protected(c *fiber.Ctx) error {
 	// Get the user from the context and return it
 	user := c.Locals("user").(*jtoken.Token)
 	claims := user.Claims.(jtoken.MapClaims)
+	id := claims["ID"].(string)
 	email := claims["email"].(string)
-	favPhrase := claims["fav"].(string)
-	return c.SendString("Welcome 👋" + email + " " + favPhrase)
+	return c.SendString("Welcome 👋" + email + " user id " + id)
 }
