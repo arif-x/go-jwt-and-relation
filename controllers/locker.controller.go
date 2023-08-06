@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"go-relation/relasi-gorm/database"
+	"go-relation/relasi-gorm/databases"
 	"go-relation/relasi-gorm/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,7 +10,7 @@ import (
 func LockerGetAll(c *fiber.Ctx) error {
 	var lockers []models.Locker
 
-	database.DB.Preload("User").Find(&lockers)
+	databases.DB.Preload("User").Find(&lockers)
 
 	return c.JSON(fiber.Map{
 		"lockers": lockers,
@@ -39,7 +39,7 @@ func CreateLocker(c *fiber.Ctx) error {
 		})
 	}
 
-	database.DB.Create(&locker)
+	databases.DB.Create(&locker)
 
 	return c.JSON(fiber.Map{
 		"message": "create data successfully",

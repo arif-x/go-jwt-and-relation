@@ -3,12 +3,12 @@ package migrations
 import (
 	"fmt"
 
-	"go-relation/relasi-gorm/database"
+	"go-relation/relasi-gorm/databases"
 	"go-relation/relasi-gorm/models"
 )
 
 func Migration() {
-	err := database.DB.AutoMigrate(
+	err := databases.DB.AutoMigrate(
 		&models.User{},
 		&models.Locker{},
 		&models.Post{},

@@ -3,7 +3,7 @@ package routes
 import (
 	"go-relation/relasi-gorm/controllers"
 
-	"go-relation/relasi-gorm/config"
+	"go-relation/relasi-gorm/configs"
 	"go-relation/relasi-gorm/middlewares"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,7 +12,7 @@ import (
 func RouteInit(app *fiber.App) {
 
 	// JWT INIT
-	jwt := middlewares.NewAuthMiddleware(config.Secret)
+	jwt := middlewares.JWTMiddleware(configs.Secret)
 
 	app.Post("/login", controllers.Login)
 	app.Get("/protected", jwt, controllers.Protected)

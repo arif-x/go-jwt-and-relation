@@ -1,8 +1,8 @@
 package main
 
 import (
-	"go-relation/relasi-gorm/database"
-	"go-relation/relasi-gorm/database/migrations"
+	"go-relation/relasi-gorm/databases"
+	"go-relation/relasi-gorm/databases/migrations"
 	"go-relation/relasi-gorm/routes"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// CONNECTION TO DATABASE
-	database.DatabaseInit()
+	databases.DatabaseInit()
 
 	// MIGRATION
 	migrations.Migration()

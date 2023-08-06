@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"go-relation/relasi-gorm/database"
+	"go-relation/relasi-gorm/databases"
 	"go-relation/relasi-gorm/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,7 +10,7 @@ import (
 func PostGetAll(c *fiber.Ctx) error {
 	var posts []models.PostResponseWithTag
 
-	database.DB.Preload("User").Preload("Tags").Find(&posts)
+	databases.DB.Preload("User").Preload("Tags").Find(&posts)
 
 	return c.JSON(fiber.Map{
 		"posts": posts,
@@ -49,14 +49,14 @@ func CreatePost(c *fiber.Ctx) error {
 		})
 	}
 
-	database.DB.Debug().Create(&post)
+	databases.DB.Debug().Create(&post)
 
 	if len(post.TagsID) > 0 {
 		for _, tagID := range post.TagsID {
 			postTag := new(models.PostTag)
 			postTag.PostID = post.ID
 			postTag.TagID = tagID
-			database.DB.Create(&postTag)
+			databases.DB.Create(&postTag)
 		}
 	}
 

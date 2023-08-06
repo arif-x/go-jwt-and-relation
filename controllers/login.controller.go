@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
-	"go-relation/relasi-gorm/config"
-	"go-relation/relasi-gorm/database"
+	"go-relation/relasi-gorm/configs"
+	"go-relation/relasi-gorm/databases"
 	"go-relation/relasi-gorm/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,13 +16,12 @@ import (
 )
 
 func FindByCredentials(email string, password string) (*models.User, error) {
-	// Here you would query your database for the user with the given email
 	user := new(models.User)
 
-	errFirst := database.DB.Where("email = ?", email).First(&user).Error
+	err := databases.DB.Where("email = ?", email).First(&user).Error
 
-	if errFirst != nil {
-		if errFirst == gorm.ErrRecordNotFound {
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
 			return nil, errors.New("user not found")
 		}
 		return nil, errors.New("user not found")
@@ -31,13 +30,12 @@ func FindByCredentials(email string, password string) (*models.User, error) {
 	check := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 
 	if check != nil {
-		return nil, errors.New("user not found")
+		return nil, errors.New("false password")
 	}
 
 	return user, nil
 }
 
-// Login route
 func Login(c *fiber.Ctx) error {
 	// Extract the credentials from the request body
 	loginRequest := new(models.LoginRequest)
@@ -63,7 +61,7 @@ func Login(c *fiber.Ctx) error {
 	// Create token
 	token := jtoken.NewWithClaims(jtoken.SigningMethodHS256, claims)
 	// Generate encoded token and send it as response.
-	t, err := token.SignedString([]byte(config.Secret))
+	t, err := token.SignedString([]byte(configs.Secret))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),

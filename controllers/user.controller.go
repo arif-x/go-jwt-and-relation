@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"go-relation/relasi-gorm/database"
+	"go-relation/relasi-gorm/databases"
 	"go-relation/relasi-gorm/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +11,7 @@ import (
 func UserGetAll(c *fiber.Ctx) error {
 	var users []models.User
 
-	database.DB.Preload("Locker").Preload("Posts").Find(&users)
+	databases.DB.Preload("Locker").Preload("Posts").Find(&users)
 
 	return c.JSON(fiber.Map{
 		"users": users,
@@ -63,7 +63,7 @@ func CreateUser(c *fiber.Ctx) error {
 
 	user.Password = string(hashedPassword)
 
-	database.DB.Create(&user)
+	databases.DB.Create(&user)
 
 	return c.JSON(fiber.Map{
 		"message": "create data successfully",
