@@ -11,21 +11,29 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	jtoken "github.com/golang-jwt/jwt/v4"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
-func FindByCredentials(email, password string) (*models.User, error) {
+func FindByCredentials(email string, password string) (*models.User, error) {
 	// Here you would query your database for the user with the given email
 	user := new(models.User)
 
-	err := database.DB.Where("email = ? AND `password` = ?", email, password).First(&user).Error
+	errFirst := database.DB.Where("email = ?", email).First(&user).Error
 
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+	if errFirst != nil {
+		if errFirst == gorm.ErrRecordNotFound {
 			return nil, errors.New("user not found")
 		}
 		return nil, errors.New("user not found")
 	}
+
+	check := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+
+	if check != nil {
+		return nil, errors.New("user not found")
+	}
+
 	return user, nil
 }
 
