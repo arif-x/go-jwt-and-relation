@@ -10,7 +10,7 @@ import (
 	"go-relation/relasi-gorm/models"
 
 	"github.com/gofiber/fiber/v2"
-	jtoken "github.com/golang-jwt/jwt/v4"
+	JWTToken "github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -53,13 +53,13 @@ func Login(c *fiber.Ctx) error {
 	}
 	day := time.Hour * 24
 	// Create the JWT claims, which includes the user ID and expiry time
-	claims := jtoken.MapClaims{
+	claims := JWTToken.MapClaims{
 		"ID":    strconv.FormatInt(int64(user.ID), 10),
 		"email": user.Email,
 		"exp":   time.Now().Add(day * 1).Unix(),
 	}
 	// Create token
-	token := jtoken.NewWithClaims(jtoken.SigningMethodHS256, claims)
+	token := JWTToken.NewWithClaims(JWTToken.SigningMethodHS256, claims)
 	// Generate encoded token and send it as response.
 	t, err := token.SignedString([]byte(configs.Secret))
 	if err != nil {
@@ -76,8 +76,8 @@ func Login(c *fiber.Ctx) error {
 // Protected route
 func Protected(c *fiber.Ctx) error {
 	// Get the user from the context and return it
-	user := c.Locals("user").(*jtoken.Token)
-	claims := user.Claims.(jtoken.MapClaims)
+	user := c.Locals("user").(*JWTToken.Token)
+	claims := user.Claims.(JWTToken.MapClaims)
 	id := claims["ID"].(string)
 	email := claims["email"].(string)
 	return c.SendString("Welcome 👋" + email + " user id " + id)

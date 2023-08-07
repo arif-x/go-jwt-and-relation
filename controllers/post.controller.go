@@ -3,6 +3,7 @@ package controllers
 import (
 	"go-relation/relasi-gorm/databases"
 	"go-relation/relasi-gorm/models"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -38,7 +39,7 @@ func CreatePost(c *fiber.Ctx) error {
 			"err": "body is required",
 		})
 	}
-	if post.UserID == 0 {
+	if post.UserID == 0 || strconv.FormatInt(int64(post.UserID), 10) == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"err": "user_id is required",
 		})

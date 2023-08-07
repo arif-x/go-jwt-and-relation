@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strconv"
+
 	"go-relation/relasi-gorm/databases"
 	"go-relation/relasi-gorm/models"
 
@@ -33,7 +35,7 @@ func CreateLocker(c *fiber.Ctx) error {
 			"err": "code is required",
 		})
 	}
-	if locker.UserID == 0 {
+	if locker.UserID == 0 || strconv.FormatInt(int64(locker.UserID), 10) == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"err": "user_id is required",
 		})
